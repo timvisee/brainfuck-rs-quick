@@ -1,4 +1,7 @@
 mod bf;
+mod interpreter;
+mod memory;
+mod op;
 
 use std::fs::File;
 use std::io::Read;
