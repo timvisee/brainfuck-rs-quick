@@ -1,7 +1,8 @@
 # Quick brainfuck interpreter in Rust
 [→ See simple implementation][simple]
 
-**Note:** this is currently a work in progress
+**Note:** the base implementation is already working.
+The optimization procedure is still a work in progress though.
 
 ---
 
@@ -15,18 +16,38 @@ interpreters out there.
 For installation, Git and Rust cargo are required.
 Install the latest version of Rust with [rustup][rustup].
 
-Create a `program.bf` file, which this application reads the program from.
-
 ```bash
 # Clone the project
 git clone https://github.com/timvisee/brainfuck-rs-quick.git
 cd brainfuck-rs-simple
 
-# Run
-cargo run --release
+# View help
+cargo run --release -- --help
+
+# Run a program
+cargo run --release -- programs/hello_world.b
 
 # Test
 cargo test
+```
+
+## Help
+```
+brainfuck-rs-quick --help
+
+brainfuck-rs-quick 0.1
+Tim Visée <timvisee@gmail.com>
+A quick brainfuck interpreter in Rust.
+
+USAGE:
+    brainfuck-rs-quick <FILE>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <FILE>    Brainfuck file to interpret
 ```
 
 ## License
