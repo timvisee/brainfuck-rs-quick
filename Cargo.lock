@@ -1,0 +1,4 @@
+[[package]]
+name = "brainfuck-rs-quick"
+version = "0.1.0"
+
