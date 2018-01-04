@@ -1,7 +1,7 @@
 use std::u8;
 
-use interpreter::Interpreter;
-use memory::Memory;
+use super::Interpreter;
+use super::Memory;
 
 
 
@@ -18,4 +18,16 @@ pub fn bf(prog: &str) -> String {
 
     // Parse and output the string
     String::from_utf8(output).unwrap()
+}
+
+
+
+/// Test whether a basic Hello World implementation of brainfuck outputs the
+/// correct result.
+#[test]
+fn test_hello_world() {
+    assert_eq!(
+        bf("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."),
+        "Hello World!\n",
+    );
 }

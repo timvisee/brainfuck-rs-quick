@@ -1,7 +1,4 @@
 mod bf;
-mod interpreter;
-mod memory;
-mod op;
 
 use std::fs::File;
 use std::io::Read;
@@ -23,14 +20,4 @@ fn main() {
 
     // Run the program and output
     println!("{}", bf(&program));
-}
-
-
-
-#[test]
-fn test_hello_world() {
-    assert_eq!(
-        bf("++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>."),
-        "Hello World!\n",
-    );
 }

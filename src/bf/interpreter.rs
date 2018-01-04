@@ -1,7 +1,7 @@
 use std::mem;
 use std::str::Bytes;
 
-use op::Op;
+use super::Op;
 
 
 

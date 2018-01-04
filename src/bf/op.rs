@@ -1,4 +1,4 @@
-use memory::Memory;
+use super::Memory;
 
 
 
