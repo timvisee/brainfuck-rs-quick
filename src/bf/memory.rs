@@ -52,6 +52,11 @@ impl Memory {
         self.data[self.pointer]
     }
 
+    /// Write the given value to the current memory cell.
+    pub fn write(&mut self, value: u8) {
+        self.data[self.pointer] = value;
+    }
+
     /// Check whether the current memory cell is zero.
     pub fn zero(&self) -> bool {
         self.data[self.pointer] == 0

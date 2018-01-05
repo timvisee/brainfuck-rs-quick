@@ -1,4 +1,7 @@
+use std::io::{Read, stdin};
+
 use super::Memory;
+use super::Options;
 
 
 
@@ -57,7 +60,7 @@ impl Op {
     ///
     /// The given `memory` and `output` objects are used to execute these
     /// operations on, if relevant.
-    pub fn execute(&self, memory: &mut Memory, output: &mut Vec<u8>) {
+    pub fn execute(&self, memory: &mut Memory, options: &Options, output: &mut Vec<u8>) {
         // Invoke operation specific logic
         match *self {
             // Seek the memory cell pointer
@@ -80,7 +83,7 @@ impl Op {
                 // Keep looping the routine until the end condition is reached
                 loop {
                     // Execute all contained operations
-                    ops.iter().for_each(|op| op.execute(memory, output));
+                    ops.iter().for_each(|op| op.execute(memory, options, output));
 
                     // End if not conditional, or if the current memory cell
                     // value is zero
@@ -94,10 +97,26 @@ impl Op {
             Op::Zero => memory.set_zero(),
 
             // Output the value of the current memory cell
-            Op::Output => output.push(memory.read()),
+            Op::Output => {
+                // Read the value
+                let value = memory.read();
+
+                // Print or buffer
+                if options.buffer {
+                    output.push(value);
+                } else {
+                    print!("{}", value as char);
+                }
+            },
 
             // Handle user input
-            Op::Input => panic!("Input not yet supported"),
+            Op::Input => memory.write(
+                stdin()
+                    .bytes()
+                    .next()
+                    .and_then(|result| result.ok())
+                    .expect("failed to read user input")
+            ),
         }
     }
 }

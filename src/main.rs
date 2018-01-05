@@ -12,8 +12,9 @@ use bf::bf;
 
 /// Application entrypoint.
 fn main() {
-    // Parse CLI arguments
+    // Parse CLI arguments, get interpreter options
     let arg_handler = ArgHandler::parse();
+    let options = arg_handler.as_options();
 
     // Open the input file
     let mut file = File::open(arg_handler.file())
@@ -24,6 +25,11 @@ fn main() {
     file.read_to_string(&mut program)
         .expect("failed to read 'program.bf'");
 
-    // Run the program and output
-    println!("{}", bf(&program));
+    // Run the program
+    let output = bf(&program, &options);
+
+    // Print the output
+    if arg_handler.buffer() {
+        println!("{}", output);
+    }
 }
