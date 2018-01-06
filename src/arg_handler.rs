@@ -29,6 +29,10 @@ impl<'a: 'b, 'b> ArgHandler<'a> {
                 .short("b")
                 .long("buffer")
                 .help("Buffer output until the program is finished"))
+			.arg(Arg::with_name("profile")
+                .short("p")
+                .long("profile")
+                .help("Profile interpreter stages"))
             .get_matches();
 
         // Instantiate
@@ -48,10 +52,16 @@ impl<'a: 'b, 'b> ArgHandler<'a> {
 		self.matches.is_present("buffer")
 	}
 
+	/// Check whether we should profile interpreter stages.
+	pub fn profile(&self) -> bool {
+		self.matches.is_present("profile")
+	}
+
     /// Create an interpreter options object, based on the CLI arguments.
     pub fn as_options(&self) -> Options {
         Options::default(
             self.buffer(),
+            self.profile(),
         )
     }
 }

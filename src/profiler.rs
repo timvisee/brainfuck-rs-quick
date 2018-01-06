@@ -80,6 +80,11 @@ impl Profiler {
         self.format(&duration)
     }
 
+    /// Report the profiler duration with the given `description`.
+    pub fn report(&mut self, description: &str) {
+        println!("# {} took {}", description, self.duration_format())
+    }
+
     /// Format the given duration in a human readable format.
     // TODO: make this method safe, improve accuracy at high numbers
     fn format(&self, d: &Duration) -> String {
