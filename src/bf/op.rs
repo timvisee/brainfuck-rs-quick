@@ -1,4 +1,4 @@
-use supe::tty_read::TermReader;
+use super::tty_read::TermReader;
 
 use super::Memory;
 use super::Options;

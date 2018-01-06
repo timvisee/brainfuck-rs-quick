@@ -1,12 +1,14 @@
 mod app;
 mod arg_handler;
 mod bf;
+mod profiler;
 
 use std::fs::File;
 use std::io::Read;
 
 use arg_handler::ArgHandler;
 use bf::bf;
+use profiler::Profiler;
 
 
 
