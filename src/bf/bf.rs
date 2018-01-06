@@ -16,6 +16,15 @@ pub fn bf(prog: &str, options: &Options) -> String {
     // Interpret the program
     let start = Interpreter::interpret(&mut prog.bytes(), &options);
 
+    // Describe program logic
+    if options.describe {
+        if options.pretty {
+            println!("{:#?}", start);
+        } else {
+            println!("{:?}", start);
+        }
+    }
+
     // Execute the program from the start and profile
     let mut profiler = Profiler::new(options.profile);
     start.execute(&mut memory, &options, &mut output);

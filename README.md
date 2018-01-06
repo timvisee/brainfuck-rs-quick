@@ -44,7 +44,9 @@ USAGE:
 
 FLAGS:
     -b, --buffer      Buffer output until the program is finished
+    -d, --describe    Describe interpreted and optimized program logic
     -h, --help        Prints help information
+        --pretty      Pretify described program logic
     -p, --profiler    Enable the profiler to interpreter stages
     -V, --version     Prints version information
 

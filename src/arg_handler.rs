@@ -34,6 +34,15 @@ impl<'a: 'b, 'b> ArgHandler<'a> {
                 .long("profiler")
                 .alias("profile")
                 .help("Enable the profiler to interpreter stages"))
+			.arg(Arg::with_name("describe")
+                .short("d")
+                .long("describe")
+                .alias("desc")
+                .help("Describe interpreted and optimized program logic"))
+			.arg(Arg::with_name("pretty")
+                .long("pretty")
+                .alias("prettify")
+                .help("Pretify described program logic"))
             .get_matches();
 
         // Instantiate
@@ -58,11 +67,23 @@ impl<'a: 'b, 'b> ArgHandler<'a> {
 		self.matches.is_present("profile")
 	}
 
+	/// Check whether to describe program logic.
+	pub fn describe(&self) -> bool {
+		self.matches.is_present("describe")
+	}
+
+	/// Check whether to pretify described program logic.
+	pub fn pretty(&self) -> bool {
+		self.matches.is_present("pretty")
+	}
+
     /// Create an interpreter options object, based on the CLI arguments.
     pub fn as_options(&self) -> Options {
         Options::default(
             self.buffer(),
             self.profile(),
+            self.describe(),
+            self.pretty(),
         )
     }
 }

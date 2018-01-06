@@ -10,6 +10,9 @@
 //! - To various cells a value may be added or subtracted with a different
 //!   factor.
 //!
+//! This optimization therefore covers many forms of copy and multiplication
+//! routines.
+//!
 //! # Optimization requirements
 //! - There must be at least 4 operations.
 //! - Subtraction must be the first operation.
