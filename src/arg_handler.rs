@@ -29,10 +29,11 @@ impl<'a: 'b, 'b> ArgHandler<'a> {
                 .short("b")
                 .long("buffer")
                 .help("Buffer output until the program is finished"))
-			.arg(Arg::with_name("profile")
+			.arg(Arg::with_name("profiler")
                 .short("p")
-                .long("profile")
-                .help("Profile interpreter stages"))
+                .long("profiler")
+                .alias("profile")
+                .help("Enable the profiler to interpreter stages"))
             .get_matches();
 
         // Instantiate

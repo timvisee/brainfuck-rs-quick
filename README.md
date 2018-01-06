@@ -40,11 +40,13 @@ Tim Visée <timvisee@gmail.com>
 A quick brainfuck interpreter in Rust.
 
 USAGE:
-    brainfuck-rs-quick <FILE>
+    brainfuck-rs-quick [FLAGS] <FILE>
 
 FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
+    -b, --buffer      Buffer output until the program is finished
+    -h, --help        Prints help information
+    -p, --profiler    Enable the profiler to interpreter stages
+    -V, --version     Prints version information
 
 ARGS:
     <FILE>    Brainfuck file to interpret
