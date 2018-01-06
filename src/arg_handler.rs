@@ -50,8 +50,8 @@ impl<'a: 'b, 'b> ArgHandler<'a> {
 
     /// Create an interpreter options object, based on the CLI arguments.
     pub fn as_options(&self) -> Options {
-        Options {
-            buffer: self.buffer(),
-        }
+        Options::default(
+            self.buffer(),
+        )
     }
 }

@@ -1,6 +1,4 @@
-extern crate tty_read;
-
-use self::tty_read::TermReader;
+use supe::tty_read::TermReader;
 
 use super::Memory;
 use super::Options;
@@ -112,7 +110,7 @@ impl Op {
 
             // Handle user input
             Op::Input => memory.write(
-                TermReader::open_stdin()
+                TermReader::open_stdin(&options.reader_options)
                     .expect("failed to open user input reader")
                     .read_byte()
                     .expect("failed to read user input")

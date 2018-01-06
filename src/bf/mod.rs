@@ -1,3 +1,5 @@
+extern crate tty_read;
+
 mod bf;
 mod interpreter;
 mod memory;

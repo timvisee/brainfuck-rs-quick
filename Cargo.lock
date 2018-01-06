@@ -92,7 +92,7 @@ dependencies = [
 [[package]]
 name = "tty-read"
 version = "0.1.0"
-source = "git+https://github.com/timvisee/tty-read-rs#54ebc5ef77b542b97cb595d42b54e1adaa2d6670"
+source = "git+https://github.com/timvisee/tty-read-rs#6739de964b1c10662232955b29792be57cf38324"
 dependencies = [
  "libc 0.2.35 (registry+https://github.com/rust-lang/crates.io-index)",
  "termios 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
