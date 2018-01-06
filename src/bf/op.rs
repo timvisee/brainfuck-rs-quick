@@ -14,6 +14,7 @@ use super::Options;
 ///
 /// Brainfuck programs are translated into these operations,
 /// which will define the program structure in-memory for quick execution.
+#[derive(Debug)]
 pub enum Op {
     /// A routine wrapping other operations.
     /// This routine may be simple, or it may be conditional with makes the
@@ -50,6 +51,12 @@ pub enum Op {
 
     /// Set the value of the current memory cell to zero.
     Zero,
+
+    /// Add the current cell value to the given relative targets,
+    /// zeroing the current cell.
+    AddAndZero {
+        targets: Vec<isize>,
+    },
 }
 
 impl Op {
@@ -115,6 +122,12 @@ impl Op {
                     .read_byte()
                     .expect("failed to read user input")
             ),
+
+            // Add the current cell value to others, and zero
+            Op::AddAndZero { ref targets } =>
+                if !memory.zero() {
+                    memory.copy_zero(targets)
+                },
         }
     }
 }

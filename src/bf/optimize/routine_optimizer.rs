@@ -1,6 +1,6 @@
 use super::super::Op;
 
-use super::routine::optimize_zero;
+use super::routine::*;
 
 
 
@@ -14,5 +14,7 @@ use super::routine::optimize_zero;
 /// If `Some` is returned, the whole routine should be replaced by it's
 /// content.
 pub fn optimize_routine(cond: bool, ops: &Vec<Op>) -> Option<Op> {
+    // Run routine optimizations
     optimize_zero(cond, ops)
+        .or(optimize_add_and_zero(cond, ops))
 }

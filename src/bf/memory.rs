@@ -66,4 +66,20 @@ impl Memory {
     pub fn set_zero(&mut self) {
         self.data[self.pointer] = 0;
     }
+
+    /// Move the current cell value to the given relative targets,
+    /// zeroing the current cell.
+    pub fn copy_zero(&mut self, targets: &Vec<isize>) {
+        // Read the cell value
+        let value = self.data[self.pointer];
+
+        // Write the values
+        for target in targets {
+            // TODO: is this cast correct
+            self.data[(self.pointer as isize + target) as usize] += value;
+        }
+
+        // Zero the current cell
+        self.set_zero();
+    }
 }
