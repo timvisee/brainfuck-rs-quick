@@ -28,23 +28,53 @@ impl Memory {
     }
 
     /// Seek the memory cell pointer for the given relative `amount`.
+    ///
+    /// The pointer won't underflow as specified by the brainfuck
+    /// specification. Instead the pointer would be set to zero.
     pub fn seek(&mut self, amount: isize) {
-        // // TODO: Is this correct
-        // // Seek if the value won't underflow
-        // if amount >= 0 || self.pointer as isize >= -amount {
-        //     self.pointer += amount as usize;
-        // } else {
-        //     self.pointer = 0;
-        // }
-        self.pointer += amount as usize;
+        self.pointer = Memory::seek_virtual(self.pointer, amount);
+    }
+
+    /// Seek a virtual memory cell pointer by the given relative `amount`.
+    /// The new pointer position is returned.
+    ///
+    /// This method follows the brainfuck specificaiton, not allowing the
+    /// index to underflow. If the number would underflow, zero is returned.
+    fn seek_virtual(pointer: usize, amount: isize) -> usize {
+        if amount > 0 {
+            pointer + (amount as usize)
+        } else {
+            pointer.checked_sub(-amount as usize).unwrap_or(0)
+            // pointer - (-amount as usize)
+        }
     }
 
     /// Increase the value of the current memory cell by the given relative
     /// `amount`.
+    ///
+    /// The pointer won't underflow as specified by the brainfuck
+    /// specification. Instead the memory cell would be set to zero.
+    /// Overflowing is allowed.
     pub fn inc(&mut self, amount: isize) {
-        // TODO: Don't go out of bound
-        // TODO: Don't cast
-        self.data[self.pointer] += amount as u8;
+        self.data[self.pointer] = Memory::inc_virtual(
+            self.data[self.pointer],
+            amount,
+        );
+    }
+
+    /// Increate a virutal memory cell by the given relative `amount`.
+    /// The new memory cell value is returned.
+    ///
+    /// This method follows the brainfuck specification, not allowing the
+    /// index to underflow. If the number would underflow, zero is returned.
+    /// Overflowing is allowed.
+    fn inc_virtual(value: u8, amount: isize) -> u8 {
+        if amount > 0 {
+            value + (amount as u8)
+        } else {
+            value.checked_sub(-amount as u8).unwrap_or(0)
+            // value - (-amount as u8)
+        }
     }
 
     /// Read and return the value of the current memory cell.
@@ -69,7 +99,9 @@ impl Memory {
 
     /// Move the current cell value to the given relative targets,
     /// zeroing the current cell.
-    pub fn copy_zero(&mut self, targets: &Vec<isize>) {
+    ///
+    /// The targets 
+    pub fn copy_zero(&mut self, targets: &Vec<(isize, f32)>) {
         // Read the cell value, return if it is zero
         let value = self.data[self.pointer];
         if value == 0 {
@@ -77,9 +109,15 @@ impl Memory {
         }
 
         // Write the values
-        for target in targets {
-            // TODO: is this cast correct
-            self.data[(self.pointer as isize + target) as usize] += value;
+        for &(target, factor) in targets {
+            // Determine the pointer position
+            let pointer = Memory::seek_virtual(self.pointer, target);
+
+            // Increase the data in the cell
+            self.data[pointer] = Memory::inc_virtual(
+                self.data[pointer],
+                (value as f32 * factor) as isize,
+            );
         }
 
         // Zero the current cell
