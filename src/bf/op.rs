@@ -55,7 +55,7 @@ pub enum Op {
     /// Add the current cell value to the given relative targets,
     /// zeroing the current cell.
     AddAndZero {
-        targets: Vec<isize>,
+        targets: Vec<(isize, f32)>,
     },
 }
 

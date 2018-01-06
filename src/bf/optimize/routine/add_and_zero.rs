@@ -5,17 +5,19 @@
 //! routine can be removed, transforming it into a single operation.
 //!
 //! This generic implementation supports many forms of this routine.
-//! - Any number of other cells can be added to.
+//! - Any number of other cells can be added to or subtracted from.
 //! - Other cells can be at any position.
+//! - To various cells a value may be added or subtracted with a different
+//!   factor.
 //!
 //! # Optimization requirements
 //! - There must be at least 4 operations.
 //! - Subtraction must be the first operation.
 //! - The following operations must be any number of the following sequence:
-//!     - Seek to another cell to add to
-//!     - Add the same amount as was subtracted
+//!     - Seek to another cell to add to or subtract from
+//!     - Add or subtract
 //! - The last operation must seek back to the base cell.
-//! - The base cell must never be touched by an other operation. !!!!!!
+//! - The base cell must never be touched by an other operation.
 //!
 //! # Example routines
 //! - `[->+<]'
@@ -30,10 +32,16 @@
 //! - `[-<<+>+>>>+<+<]`
 //!     - Add the current cell value to cell: -2, -1, 1, 2
 //!     - Zero the current cell
-//!
-//! Variants supported in the future:
 //! - `[--->+++>+++<<]`
 //!     - Add the current cell value to the next two, in steps of 3
+//!     - Zero the current cell
+//! - `[->+>++>-<<<]`
+//!     - Add the current value to the next cell
+//!     - Add the current value to the 2nd next cell times 2
+//!     - Zero the current and 3rd cell
+//! - `[--->+<<+++>]`
+//!     - Add a 1/3e of the current cell to the next cell
+//!     - Add the current cell value to the previous cell
 //!     - Zero the current cell
 
 
@@ -62,10 +70,9 @@ pub fn optimize_add_and_zero(cond: bool, ops: &Vec<Op>) -> Option<Op> {
     let mut iter = ops.iter().enumerate();
 
     // The first cell must subtract
-    // TODO: support other amounts here
-    let step = 1;
+    let step;
     match iter.next() {
-        Some((_, &Op::Inc { amount })) if amount == -step => {},
+        Some((_, &Op::Inc { amount })) if amount < 0 => step = -amount,
         _ => return None,
     }
 
@@ -86,9 +93,15 @@ pub fn optimize_add_and_zero(cond: bool, ops: &Vec<Op>) -> Option<Op> {
             _ => return None,
         }
 
-        // This must be addition
+        // This must add/subtract, remember the factor to do it with
+        let factor;
         match sub_op {
-            &Op::Inc { amount } if amount == step => {},
+            &Op::Inc { amount } =>
+                factor = if amount != 0 {
+                    amount as f32 / step as f32
+                } else {
+                    0f32
+                },
             _ => return None,
         }
 
@@ -98,7 +111,9 @@ pub fn optimize_add_and_zero(cond: bool, ops: &Vec<Op>) -> Option<Op> {
         }
 
         // Add the current offset to the target list
-        targets.push(offset);
+        if factor != 0f32 {
+            targets.push((offset, factor));
+        }
 
         // If the subtraction was the second last operator,
         // the last must set the offset back to zero
