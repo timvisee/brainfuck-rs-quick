@@ -23,6 +23,7 @@ name = "brainfuck-rs-quick"
 version = "0.1.0"
 dependencies = [
  "clap 2.29.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tty-read 0.1.0 (git+https://github.com/timvisee/tty-read-rs)",
 ]
 
 [[package]]
@@ -73,11 +74,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "termios"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.2.35 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "textwrap"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "unicode-width 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "tty-read"
+version = "0.1.0"
+source = "git+https://github.com/timvisee/tty-read-rs#54ebc5ef77b542b97cb595d42b54e1adaa2d6670"
+dependencies = [
+ "libc 0.2.35 (registry+https://github.com/rust-lang/crates.io-index)",
+ "termios 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -119,7 +137,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum redox_termios 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)" = "7e891cfe48e9100a70a3b6eb652fef28920c117d366339687bd5576160db0f76"
 "checksum strsim 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b4d15c810519a91cf877e7e36e63fe068815c678181439f2f29e2562147c3694"
 "checksum termion 1.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "689a3bdfaab439fd92bc87df5c4c78417d3cbe537487274e9b0b2dce76e92096"
+"checksum termios 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "70226acdf12d182df757d9fb07c0257a1558ec48c8059f607d6b38145ce4e2fa"
 "checksum textwrap 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "c0b59b6b4b44d867f1370ef1bd91bfb262bf07bf0ae65c202ea2fbc16153b693"
+"checksum tty-read 0.1.0 (git+https://github.com/timvisee/tty-read-rs)" = "<none>"
 "checksum unicode-width 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)" = "bf3a113775714a22dcb774d8ea3655c53a32debae63a063acc00a91cc586245f"
 "checksum vec_map 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "887b5b631c2ad01628bbbaa7dd4c869f80d3186688f8d0b6f58774fbe324988c"
 "checksum winapi 0.3.3 (registry+https://github.com/rust-lang/crates.io-index)" = "b09fb3b6f248ea4cd42c9a65113a847d612e17505d6ebd1f7357ad68a8bf8693"

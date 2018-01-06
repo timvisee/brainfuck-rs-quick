@@ -5,3 +5,4 @@ authors = ["timvisee <timvisee@gmail.com>"]
 
 [dependencies]
 clap = "2.29"
+tty-read = { git = "https://github.com/timvisee/tty-read-rs" }

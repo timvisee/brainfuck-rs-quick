@@ -1,4 +1,6 @@
-use std::io::{Read, stdin};
+extern crate tty_read;
+
+use self::tty_read::TermReader;
 
 use super::Memory;
 use super::Options;
@@ -98,23 +100,21 @@ impl Op {
 
             // Output the value of the current memory cell
             Op::Output => {
-                // Read the value
+                // Read the value, and push it to the output
                 let value = memory.read();
+                output.push(value);
 
-                // Print or buffer
-                if options.buffer {
-                    output.push(value);
-                } else {
+                // If not buffered, print the value immediately
+                if !options.buffer {
                     print!("{}", value as char);
                 }
             },
 
             // Handle user input
             Op::Input => memory.write(
-                stdin()
-                    .bytes()
-                    .next()
-                    .and_then(|result| result.ok())
+                TermReader::open_stdin()
+                    .expect("failed to open user input reader")
+                    .read_byte()
                     .expect("failed to read user input")
             ),
         }
