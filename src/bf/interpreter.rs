@@ -3,6 +3,8 @@ use std::str::Bytes;
 
 use profiler::Profiler;
 
+use super::optimize::optimize_routine;
+
 use super::{Op, Options};
 
 
@@ -42,15 +44,12 @@ impl Interpreter {
         // Interpret the contained routine operations
         let ops = Interpreter::interpret_vec(bytes);
 
-        // Optimize a zeroing loop
-        if cond && ops.iter().all(|op| match *op {
-                Op::Inc { .. } => true,
-                _ => false,
-            }) {
-            return Op::Zero;
+        // Optimize the routine
+        if let Some(opt) = optimize_routine(cond, &ops) {
+            return opt;
         }
 
-        // Wrap the oprations in a routine
+        // Wrap the oprations in a routine as normal
         Op::Routine {
             ops,
             cond,
