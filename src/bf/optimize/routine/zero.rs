@@ -1,3 +1,30 @@
+//! # Zeroing routine optimization
+//! This optimizes routines that zero the current memory cell,
+//! and replaces the routine with a single instruction.
+//!
+//! Because memory cells should overflow, this optimization also replaces
+//! routines that only use additions.
+//!
+//! If a memory cell is an odd number, and a routine constantly adds an even
+//! number to the cell it would normally be possible to create an infinite
+//! routine as zero would never be reached. This optimization ignores this
+//! and zero's te cell.
+//!
+//! # Optimization requirements
+//! - A routine that must only contain add and subtract operations.
+//!
+//! # Example routines
+//! - `[-]'
+//!     - Zero the current cell
+//! - `[---]`
+//!     - Zero the current cell
+//! - `[+]`
+//!     - Zero the current cell
+//! - `[++-]`
+//!     - Zero the current cell
+
+
+
 use super::super::super::Op;
 
 
