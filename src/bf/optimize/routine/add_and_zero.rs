@@ -92,6 +92,11 @@ pub fn optimize_add_and_zero(cond: bool, ops: &Vec<Op>) -> Option<Op> {
             _ => return None,
         }
 
+        // We may not overwrite the base cell
+        if offset == 0 {
+            return None;
+        }
+
         // Add the current offset to the target list
         targets.push(offset);
 
