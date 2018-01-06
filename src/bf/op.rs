@@ -124,10 +124,7 @@ impl Op {
             ),
 
             // Add the current cell value to others, and zero
-            Op::AddAndZero { ref targets } =>
-                if !memory.zero() {
-                    memory.copy_zero(targets)
-                },
+            Op::AddAndZero { ref targets } => memory.copy_zero(targets),
         }
     }
 }

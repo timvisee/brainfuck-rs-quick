@@ -70,8 +70,11 @@ impl Memory {
     /// Move the current cell value to the given relative targets,
     /// zeroing the current cell.
     pub fn copy_zero(&mut self, targets: &Vec<isize>) {
-        // Read the cell value
+        // Read the cell value, return if it is zero
         let value = self.data[self.pointer];
+        if value == 0 {
+            return;
+        }
 
         // Write the values
         for target in targets {

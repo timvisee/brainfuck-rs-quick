@@ -1,3 +1,43 @@
+//! # Add and Zero optimization
+//! This optimization optimizes routines that add their current value to some
+//! other number of cells, and then zero their own cell.
+//! This routine is quite common, and has great optimizability as the whole
+//! routine can be removed, transforming it into a single operation.
+//!
+//! This generic implementation supports many forms of this routine.
+//! - Any number of other cells can be added to.
+//! - Other cells can be at any position.
+//!
+//! # Optimization requirements
+//! - There must be at least 4 operations.
+//! - Subtraction must be the first operation.
+//! - The following operations must be any number of the following sequence:
+//!     - Seek to another cell to add to
+//!     - Add the same amount as was subtracted
+//! - The last operation must seek back to the base cell.
+//! - The base cell must never be touched by an other operation. !!!!!!
+//!
+//! # Example routines
+//! - `[->+<]'
+//!     - Add the current cell value to the next cell
+//!     - Zero the current cell
+//! - `[->>>+<<<]`
+//!     - Add the current cell value to the 3rd next cell
+//!     - Zero the current cell
+//! - `[->+>+>+<<<]`
+//!     - Add the current cell value to the next 3 cells
+//!     - Zero the current cell
+//! - `[-<<+>+>>>+<+<]`
+//!     - Add the current cell value to cell: -2, -1, 1, 2
+//!     - Zero the current cell
+//!
+//! Variants supported in the future:
+//! - `[--->+++>+++<<]`
+//!     - Add the current cell value to the next two, in steps of 3
+//!     - Zero the current cell
+
+
+
 use super::super::super::Op;
 
 
