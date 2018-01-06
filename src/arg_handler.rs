@@ -64,7 +64,7 @@ impl<'a: 'b, 'b> ArgHandler<'a> {
 
 	/// Check whether we should profile interpreter stages.
 	pub fn profile(&self) -> bool {
-		self.matches.is_present("profile")
+		self.matches.is_present("profiler")
 	}
 
 	/// Check whether to describe program logic.
