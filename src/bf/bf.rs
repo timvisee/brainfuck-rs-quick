@@ -1,8 +1,8 @@
 use std::u8;
 
-use super::Interpreter;
-use super::Memory;
-use super::Options;
+use profiler::Profiler;
+
+use super::{Interpreter, Memory, Options};
 
 
 
@@ -13,9 +13,15 @@ pub fn bf(prog: &str, options: &Options) -> String {
     let mut memory = Memory::new();
     let mut output: Vec<u8> = vec![];
 
-    // Interpret the program, and execute it
-    Interpreter::interpret(&mut prog.bytes())
-        .execute(&mut memory, &options, &mut output);
+    // Interpret the program
+    let start = Interpreter::interpret(&mut prog.bytes(), &options);
+
+    // Execute the program from the start and profile
+    let mut profiler = Profiler::new(options.profile);
+    start.execute(&mut memory, &options, &mut output);
+    if options.profile {
+        profiler.report("Executing");
+    }
 
     // Parse and output the string
     String::from_utf8(output).unwrap()

@@ -1,7 +1,9 @@
 use std::mem;
 use std::str::Bytes;
 
-use super::Op;
+use profiler::Profiler;
+
+use super::{Op, Options};
 
 
 
@@ -14,8 +16,19 @@ pub struct Interpreter;
 impl Interpreter {
     /// Interpret a brainfuck program from the given byte stream.
     /// Output a routine containing the whole state.
-    pub fn interpret(program: &mut Bytes) -> Op {
-        Interpreter::interpret_routine(program, false)
+    pub fn interpret(program: &mut Bytes, options: &Options) -> Op {
+        // Start a profiler
+        let mut profiler = Profiler::new(options.profile);
+
+        // Interpret
+        let start = Interpreter::interpret_routine(program, false);
+
+        // Report timings
+        if options.profile {
+            profiler.report("Interpreting and optimizing");
+        }
+
+        start
     }
 
     /// Interpret the given stream of bytes into a routine.
