@@ -50,10 +50,7 @@ impl Interpreter {
         }
 
         // Wrap the oprations in a routine as normal
-        Op::Routine {
-            ops,
-            cond,
-        }
+        Op::Routine(ops, cond)
     }
 
     /// Interpret the given stream of bytes into a vector of operations.
@@ -186,18 +183,14 @@ impl Interpreter {
         // or to commit and define a new operator workspace
         match *workspace {
             // Combine with the workspace operation
-            Some(
-                Op::Seek {
-                    amount: ref mut current,
-                }
-            ) => *current += amount,
+            Some(Op::Seek(ref mut current)) => *current += amount,
 
             // Commit the workspace, start working on a new seek operator
             _ => Interpreter::commit(
                 workspace,
                 ops,
                 Some(
-                    Op::Seek { amount }
+                    Op::Seek(amount),
                 ),
             ),
         }
@@ -225,18 +218,14 @@ impl Interpreter {
         // or to commit and define a new operator workspace
         match *workspace {
             // Combine with the workspace operation
-            Some(
-                Op::Inc {
-                    amount: ref mut current,
-                }
-            ) => *current += amount,
+            Some(Op::Inc(ref mut current)) => *current += amount,
 
             // Commit the workspace, start working on a new increment operator
             _ => Interpreter::commit(
                 workspace,
                 ops,
                 Some(
-                    Op::Inc { amount }
+                    Op::Inc(amount),
                 ),
             ),
         }

@@ -75,7 +75,7 @@ pub fn optimize_add_and_zero(cond: bool, ops: &Vec<Op>) -> Option<Op> {
     // The first cell must subtract
     let step;
     match iter.next() {
-        Some((_, &Op::Inc { amount })) if amount < 0 => step = -amount,
+        Some((_, &Op::Inc(amount))) if amount < 0 => step = -amount,
         _ => return None,
     }
 
@@ -92,14 +92,14 @@ pub fn optimize_add_and_zero(cond: bool, ops: &Vec<Op>) -> Option<Op> {
 
         // This must be a seek, modify the offste
         match seek_op {
-            &Op::Seek { amount } => offset += amount,
+            &Op::Seek(amount) => offset += amount,
             _ => return None,
         }
 
         // This must add/subtract, remember the factor to do it with
         let factor;
         match sub_op {
-            &Op::Inc { amount } =>
+            &Op::Inc(amount) =>
                 factor = if amount != 0 {
                     amount as f32 / step as f32
                 } else {
@@ -126,15 +126,13 @@ pub fn optimize_add_and_zero(cond: bool, ops: &Vec<Op>) -> Option<Op> {
 
             // This must be addition
             match reset_op {
-                &Op::Seek { amount } if amount == -offset=> {},
+                &Op::Seek(amount) if amount == -offset=> {},
                 _ => return None,
             }
 
             // This optimization is succesful, return the resulting operator
             return Some(
-                Op::AddAndZero {
-                    targets,
-                }
+                Op::AddAndZero(targets),
             );
         }
     }

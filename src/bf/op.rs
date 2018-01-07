@@ -19,29 +19,21 @@ pub enum Op {
     /// A routine wrapping other operations.
     /// This routine may be simple, or it may be conditional with makes the
     /// routine loopable.
-    Routine {
-        /// A set of operations contained by this routine
-        ops: Vec<Op>,
+    ///
+    /// The fist property defines the set of operations countained by this
+    /// routine.
+    /// The second property defines whether this routine is
+    /// conditional/loopable.
+    /// - `true` if this routine is contitionally loopable.
+    /// - `false` if it isn't.
+    Routine(Vec<Op>, bool),
 
-        /// Defines whether this routine is loopable.
-        ///
-        /// `true` if this routine is contitionally loopable.
-        /// `false` if it isn't.
-        cond: bool,
-    },
-
-    /// Seek the memory pointer for the relative `amount`.
-    Seek {
-        /// Seek amount
-        amount: isize
-    },
+    /// Seek the memory pointer for the relative amount.
+    Seek(isize),
 
     /// Increment the value in the current memory cell with the relative
-    /// `amount`.
-    Inc {
-        /// Increase amount
-        amount: isize
-    },
+    /// amount.
+    Inc(isize),
 
     /// Put a byte from user input into the current memory cell.
     Input,
@@ -54,9 +46,7 @@ pub enum Op {
 
     /// Add the current cell value to the given relative targets,
     /// zeroing the current cell.
-    AddAndZero {
-        targets: Vec<(isize, f32)>,
-    },
+    AddAndZero(Vec<(isize, f32)>),
 }
 
 impl Op {
@@ -71,16 +61,13 @@ impl Op {
         // Invoke operation specific logic
         match *self {
             // Seek the memory cell pointer
-            Op::Seek { amount } => memory.seek(amount),
+            Op::Seek(amount) => memory.seek(amount),
 
             // Increase the value in the current memory cell
-            Op::Inc { amount } => memory.inc(amount),
+            Op::Inc(amount) => memory.inc(amount),
 
             // Invoke a routine
-            Op::Routine {
-                ref ops,
-                cond,
-            } => {
+            Op::Routine(ref ops, cond) => {
                 // If conditional, skip the routine if the current memory cell
                 // value is zero
                 if cond && memory.zero() {
@@ -124,7 +111,7 @@ impl Op {
             ),
 
             // Add the current cell value to others, and zero
-            Op::AddAndZero { ref targets } => memory.copy_zero(targets),
+            Op::AddAndZero(ref targets) => memory.copy_zero(targets),
         }
     }
 }
