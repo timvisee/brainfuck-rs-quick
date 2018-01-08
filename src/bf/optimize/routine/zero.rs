@@ -47,7 +47,7 @@ pub fn optimize_zero(cond: bool, ops: &Vec<Op>) -> Option<Op> {
     // Check whether we can optimize
     if ops.iter().all(
         |op| match *op {
-            Op::Inc { .. } => true,
+            Op::Inc(..) => true,
             _ => false,
         }
     ) {
