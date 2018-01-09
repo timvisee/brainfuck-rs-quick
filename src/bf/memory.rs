@@ -41,11 +41,10 @@ impl Memory {
     /// This method follows the brainfuck specificaiton, not allowing the
     /// index to underflow. If the number would underflow, zero is returned.
     fn seek_virtual(pointer: usize, amount: isize) -> usize {
-        if amount > 0 {
+        if amount >= 0 {
             pointer + (amount as usize)
         } else {
-            pointer.checked_sub(-amount as usize).unwrap_or(0)
-            // pointer - (-amount as usize)
+            pointer.saturating_sub(-amount as usize)
         }
     }
 
@@ -69,11 +68,10 @@ impl Memory {
     /// index to underflow. If the number would underflow, zero is returned.
     /// Overflowing is allowed.
     fn inc_virtual(value: u8, amount: isize) -> u8 {
-        if amount > 0 {
+        if amount >= 0 {
             value + (amount as u8)
         } else {
-            value.checked_sub(-amount as u8).unwrap_or(0)
-            // value - (-amount as u8)
+            value.saturating_sub(-amount as u8)
         }
     }
 
