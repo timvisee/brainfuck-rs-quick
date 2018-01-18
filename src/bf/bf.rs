@@ -14,7 +14,7 @@ pub fn bf(prog: &str, options: &Options) -> String {
     let mut output: Vec<u8> = vec![];
 
     // Interpret the program
-    let start = Interpreter::interpret(&mut prog.bytes(), &options);
+    let mut start = Interpreter::interpret(&mut prog.bytes(), &options);
 
     // Describe program logic
     if options.describe {
@@ -31,6 +31,13 @@ pub fn bf(prog: &str, options: &Options) -> String {
     if options.profile {
         profiler.report("Executing");
     }
+
+    let mut routines = Vec::new();
+    start.collect_routines(&mut routines);
+    routines.sort_by(|a, b| b.count().cmp(&a.count()));
+    routines.iter().take(100).enumerate().for_each(|(i, routine)|
+        println!("# TOP {} # {:?}", i, routine)
+    );
 
     // Parse and output the string
     String::from_utf8(output).unwrap()

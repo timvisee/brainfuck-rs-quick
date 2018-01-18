@@ -14,7 +14,7 @@ use super::Options;
 ///
 /// Brainfuck programs are translated into these operations,
 /// which will define the program structure in-memory for quick execution.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Op {
     /// A routine wrapping other operations.
     /// This routine may be simple, or it may be conditional with makes the
@@ -26,7 +26,7 @@ pub enum Op {
     /// conditional/loopable.
     /// - `true` if this routine is contitionally loopable.
     /// - `false` if it isn't.
-    Routine(Vec<Op>, bool),
+    Routine(Vec<Op>, bool, usize),
 
     /// Seek the memory pointer for the relative amount.
     Seek(isize),
@@ -57,7 +57,7 @@ impl Op {
     ///
     /// The given `memory` and `output` objects are used to execute these
     /// operations on, if relevant.
-    pub fn execute(&self, memory: &mut Memory, options: &Options, output: &mut Vec<u8>) {
+    pub fn execute(&mut self, memory: &mut Memory, options: &Options, output: &mut Vec<u8>) {
         // Invoke operation specific logic
         match *self {
             // Seek the memory cell pointer
@@ -67,7 +67,7 @@ impl Op {
             Op::Inc(amount) => memory.inc(amount),
 
             // Invoke a routine
-            Op::Routine(ref ops, cond) => {
+            Op::Routine(ref mut ops, cond, ref mut count) => {
                 // If conditional, skip the routine if the current memory cell
                 // value is zero
                 if cond && memory.zero() {
@@ -77,7 +77,10 @@ impl Op {
                 // Keep looping the routine until the end condition is reached
                 loop {
                     // Execute all contained operations
-                    ops.iter().for_each(|op| op.execute(memory, options, output));
+                    ops.iter_mut().for_each(|op| op.execute(memory, options, output));
+
+                    // Increase the routine counter
+                    *count += 1;
 
                     // End if not conditional, or if the current memory cell
                     // value is zero
@@ -112,6 +115,27 @@ impl Op {
 
             // Add the current cell value to others, and zero
             Op::AddAndZero(ref targets) => memory.copy_zero(targets),
+        }
+    }
+
+    pub fn collect_routines(&self, routines: &mut Vec<Op>) {
+        match *self {
+            // Invoke a routine
+            Op::Routine(ref ops, _, _) => {
+                // Collect the inner routines
+                ops.iter().for_each(|op| op.collect_routines(routines));
+
+                // Clone this routine
+                routines.push((*self).clone());
+            },
+            _ => {},
+        }
+    }
+
+    pub fn count(&self) -> usize {
+        match *self {
+            Op::Routine(_, _, count) => count,
+            _ => panic!("not a routine"),
         }
     }
 }

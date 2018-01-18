@@ -50,7 +50,7 @@ impl Interpreter {
         }
 
         // Wrap the oprations in a routine as normal
-        Op::Routine(ops, cond)
+        Op::Routine(ops, cond, 0)
     }
 
     /// Interpret the given stream of bytes into a vector of operations.
